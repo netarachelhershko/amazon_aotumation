@@ -7,3 +7,4 @@ class AmazonAPIManger(object):
 
     def get_api(self):
         return self.api
+

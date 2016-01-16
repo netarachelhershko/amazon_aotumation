@@ -18,3 +18,4 @@ class KeywordExtractor(object):
                 keywords.append(row[0])
 
         return keywords
+

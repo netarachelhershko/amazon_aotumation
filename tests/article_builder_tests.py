@@ -39,3 +39,4 @@ class ArticleBuilderTests(unittest.TestCase):
             our_article += PRODUCT_FORMAT.format(title, img, review)
 
         self.assertTrue(our_article == article)
+

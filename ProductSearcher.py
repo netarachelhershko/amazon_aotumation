@@ -33,3 +33,4 @@ class ProductSearcher(object):
                 break
 
         return products
+

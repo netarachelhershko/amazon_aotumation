@@ -26,3 +26,4 @@ class WordPressUploader(object):
         post.content = article
         post.id = self.client.call(NewPost(post))
         post.post_status = 'publish'
+

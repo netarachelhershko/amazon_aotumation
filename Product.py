@@ -64,3 +64,4 @@ class Product(object):
     def get_rating(self):
         rating = self.soup.findAll("div", id="avgRating")[0].span.a.span.text[:3]
         return rating
+

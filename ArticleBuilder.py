@@ -33,3 +33,4 @@ class ArticleBuilder(object):
             article += PRODUCT_FORMAT.format(title, img, review)
 
         return article
+
