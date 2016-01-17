@@ -9,22 +9,37 @@ CLASS_FORMAT = "{0} wp-image-785 size-medium"
 
 
 class ArticleBuilder(object):
-    def __init__(self, keyword):
+    def __init__(self, keyword, products):
+        """
+        :param keyword: keyword search
+        :param products: list with Product items
+        :return:
+        """
         self.keyword = keyword
+        self.products = products
 
     def get_title(self):
         title = "The Best {0}".format(self.keyword.title())
         return title
 
-    def build(self, products, table_id):
-        '''
+    def get_tags(self):
+        tags = []
+        for product in self.products:
+            if product.manufacturer != '':
+                tags.append(product.manufacturer)
 
+        return list(set(tags))
+
+    def build(self, table_id):
+        '''
+        Build an article, written in HTML, the article include the table,
+        title, review and image for all the products.
         :param : list with Product items.
         :return article: html string
         '''
 
         article = TABLE_FORMAT.format(table_id)
-        for index, product in enumerate(products):
+        for index, product in enumerate(self.products):
             shorten_url = common.get_short_url(product.page_url)
             alignment = CLASS_FORMAT.format('alignleft' if index % 2 == 0 else 'alignright')
             title = TITLE_FORMAT.format(shorten_url, product.title)
@@ -33,4 +48,3 @@ class ArticleBuilder(object):
             article += PRODUCT_FORMAT.format(title, img, review)
 
         return article
-

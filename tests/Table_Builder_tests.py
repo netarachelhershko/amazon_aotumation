@@ -10,6 +10,7 @@ OUR_TABLE_PATH = r'article2.csv'
 
 class TableBuilderTests(unittest.TestCase):
     def setUp(self):
+        self.fieldnames_list = ['Picture', 'Name', 'Rating','Price']
         self.fieldnames = {'Picture': '',
                            'Name': '',
                            'Rating': '',
@@ -24,7 +25,7 @@ class TableBuilderTests(unittest.TestCase):
         products = self.seach.search(self.product_group, self.keyword)
         self.table.build(products)
         with open(OUR_TABLE_PATH,'wb') as f:
-            writer = csv.DictWriter(f, fieldnames=self.fieldnames.keys())
+            writer = csv.DictWriter(f, fieldnames=self.fieldnames_list)
             writer.writeheader()
             for product in products:
                 self.fieldnames['Picture'] = product.get_img_url('SmallImage')

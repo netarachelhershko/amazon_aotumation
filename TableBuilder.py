@@ -5,6 +5,7 @@ IMG_FORMAT = '<a target="_blank" rel="nofollow" href="http://amzn.to/1F9ASJc"><i
 
 class TableBuilder(object):
     def __init__(self):
+        self.fieldnames_list = ['Picture', 'Name', 'Rating','Price']
         self.fieldnames = {'Picture': '',
                            'Name': '',
                            'Rating': '',
@@ -12,7 +13,7 @@ class TableBuilder(object):
 
     def build(self, products):
         with open(TABLE_PATH, 'wb') as f:
-            writer = csv.DictWriter(f, fieldnames=self.fieldnames.keys())
+            writer = csv.DictWriter(f, fieldnames=self.fieldnames_list)
             writer.writeheader()
             for product in products:
                 self.fieldnames['Picture'] = IMG_FORMAT.format(product.get_img_url('SmallImage'))

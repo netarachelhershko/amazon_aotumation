@@ -6,8 +6,8 @@ class KeywordExtractor(object):
     def extract(path):
         '''
         Get a list with keywords from the file.
-        :param path: path to csv file.
-        :return list: keywords list
+        :param path: Path to csv file.
+        :return list: Keywords list
         '''
 
         keywords = []
