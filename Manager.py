@@ -1,28 +1,32 @@
-import Config
-from ArticleBuilder import ArticleBuilder
-from KeywordExtractor import KeywordExtractor
-from ProductSearcher import ProductSearcher
-from TableBuilder import TableBuilder
-from WordPressUploader import WordPressUploader
+import config
+from article_builder import ArticleBuilder
+from keyword_extractor import KeywordExtractor
+from product_searcher import ProductSearcher
+from table_builder import TableBuilder
+from word_press_uploader import WordPressUploader
 
 
 class Manager(object):
+    MIN_PRODUCTS = 8
     def __init__(self):
-        self.searcher = ProductSearcher(Config.CONFIG)
-        self.table = TableBuilder()
+        self.searcher = ProductSearcher(config.CONFIG)
+        self.table_builder = TableBuilder()
 
     def _upload_article(self, keyword):
         """
         Get a keyword and uploads an article.
         :param keyword:
         """
-        products = self.searcher.search(Config.PRODUCT_GROUP, keyword)
-        self.table.build(products)
+        products = self.searcher.search(config.PRODUCT_GROUP, keyword)
+        if len(products) < self.MIN_PRODUCTS:
+            return
+
+        self.table_builder.build(products)
 
         article_builder = ArticleBuilder(keyword, products)
         title = article_builder.get_title()
-        wordpress_uploader = WordPressUploader(title, Config.URL,
-                                               Config.USER_NAME, Config.PASSWORD)
+        wordpress_uploader = WordPressUploader(title, config.URL,
+                                               config.USER_NAME, config.PASSWORD)
 
         table_id = wordpress_uploader.upload_table()
         content = article_builder.build(table_id)
@@ -37,7 +41,7 @@ class Manager(object):
         """
         Loops through the keywords, and uploads an article for each.
         """
-        keywords = KeywordExtractor.extract(Config.KEYWORDS_PATH)
+        keywords = KeywordExtractor.extract(config.KEYWORDS_FILE_PATH)
         for keyword in keywords:
             self._upload_article(keyword)
 

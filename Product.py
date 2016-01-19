@@ -17,12 +17,12 @@ class Product(object):
         try:
             self.manufacturer = str(product_item.ItemAttributes.Manufacturer)
         except:
-            self.manufacturer = ''
+            self.manufacturer = 'null'
 
     def get_categories(self):
         """
-        Loop through the the ancestors name and append its to list
-        :return: Lise with 2 categories.
+        Loop through the ancestors name and append its to list
+        :return: List with 2 categories.
         """
         node = self.browse_nodes.Items.Item.BrowseNodes.BrowseNode
         self.categories.append(str(node.Name))
@@ -46,9 +46,12 @@ class Product(object):
         html_text = open_url(five_stars_review_url).text
         soup = BeautifulSoup(html_text)
         all_reviews = soup.findAll("span", "a-size-base review-text")
-        all_reviews = [review.text for review in all_reviews]
-        all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
-        return all_reviews[0].encode('utf-8')
+        if len(all_reviews) > 0:
+            all_reviews = [review.text for review in all_reviews]
+            all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
+            return all_reviews[0].encode('utf-8')
+
+        return 'null'
 
     def get_img_url(self, size='MediumImage'):
         '''
@@ -58,7 +61,7 @@ class Product(object):
         '''
         args = ['SmallImage', 'MediumImage', 'LargeImage']
         if size not in args:
-            raise ValueError("must be uppercase, the options is:{0}".format(args))
+            raise ValueError("Must be one of {0}, got {1}".format(args), size)
 
         if hasattr(self.browse_nodes.Items.Item, size):
             return getattr(self.browse_nodes.Items.Item, size).URL
@@ -68,10 +71,17 @@ class Product(object):
     def get_price(self):
         node = self.browse_nodes.Items.Item.OfferSummary
         if hasattr(node, 'LowestNewPrice'):
-            return node.FormattedPrice
+            return node.LowestNewPrice.FormattedPrice
 
-        return self.soup.findAll("span", id="priceblock_ourprice")[0].text
+        find_all = self.soup.findAll("span", id="priceblock_ourprice")
+        if len(find_all) > 0:
+            return find_all[0].text
+
+        return 'null'
 
     def get_rating(self):
-        rating = self.soup.findAll("div", id="avgRating")[0].span.a.span.text[:3]
-        return rating
+        find_all = self.soup.findAll("div", id="avgRating")
+        if len(find_all) > 0:
+            return find_all[0].span.a.span.text[:3]
+
+        return 'null'

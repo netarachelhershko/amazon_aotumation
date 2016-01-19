@@ -1,7 +1,7 @@
 from wordpress_xmlrpc import Client
 from wordpress_xmlrpc import WordPressPost
 from wordpress_xmlrpc.methods.posts import NewPost
-from AddTableToTablepress import AddTableToTablepress
+from add_table_to_tablepress import AddTableToTablepress
 from wordpress_xmlrpc.compat import xmlrpc_client
 from wordpress_xmlrpc.methods import media
 
@@ -45,8 +45,8 @@ class WordPressUploader(object):
         post.terms_names = {'post_tag': tags,
                             'category': categories}
 
-        post.id = self.client.call(NewPost(post))
         post.post_status = 'publish'
+        post.id = self.client.call(NewPost(post))
 
     def _upload_image(self, img_url):
         """
@@ -55,19 +55,11 @@ class WordPressUploader(object):
         :return: attachment_id.
         """
         content_file = open_url(img_url).content
-
-        # prepare metadata
         data = {
             'name': 'picture.jpg',
-            'type': 'image/jpeg',  # mimetype
+            'type': 'image/jpeg',
             'bits': xmlrpc_client.Binary(content_file)
         }
 
         response = self.client.call(media.UploadFile(data))
-        # response == {
-        #       'id': 6,
-        #       'file': 'picture.jpg'
-        #       'url': 'http://www.example.com/wp-content/uploads/2012/04/16/picture.jpg',
-        #       'type': 'image/jpeg',
-        # }
         return response['id']

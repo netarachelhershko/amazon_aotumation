@@ -1,9 +1,9 @@
 import unittest
 
-import Config
+import config
 import common
-from ArticleBuilder import ArticleBuilder
-from ProductSearcher import ProductSearcher
+from article_builder import ArticleBuilder
+from product_searcher import ProductSearcher
 
 TABLE_FORMAT = '[table id={0} /]'
 REVIEW_FORMAT = '<em><strong>Testimonial:</strong></em> <blockquote><em>{0}</em></blockquote>'
@@ -16,8 +16,8 @@ CLASS_FORMAT = "{0} wp-image-785 size-medium"
 class ArticleBuilderTests(unittest.TestCase):
     def setUp(self):
         self.keyword = 'boots'
-        self.product_searcher = ProductSearcher(Config.CONFIG)
-        self.products = self.product_searcher.search(Config.PRODUCT_GROUP, self.keyword)
+        self.product_searcher = ProductSearcher(config.CONFIG)
+        self.products = self.product_searcher.search(config.PRODUCT_GROUP, self.keyword)
         self.article_builder = ArticleBuilder(self.keyword, self.products)
 
     def test_title_sanity(self):

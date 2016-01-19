@@ -1,43 +1,44 @@
 import unittest
 import csv
 
-from TableBuilder import TableBuilder
-from ProductSearcher import ProductSearcher
-
-TABLE_PATH = r'article.csv'
-OUR_TABLE_PATH = r'article2.csv'
+from table_builder import TableBuilder
+from product_searcher import ProductSearcher
+from os import mkdir, listdir, path
+from config import URL,USER_NAME,PASSWORD, CONFIG
 
 
 class TableBuilderTests(unittest.TestCase):
+    TITLE = 'title'
+    TABLE_PATH = r'article.csv'
+    OUR_TABLE_PATH = r'articles\{0}\article2.csv'
+
     def setUp(self):
         self.fieldnames_list = ['Picture', 'Name', 'Rating','Price']
-        self.fieldnames = {'Picture': '',
-                           'Name': '',
-                           'Rating': '',
-                           'Price': ''}
-
         self.product_group = 'Shoes'
         self.keyword = 'Boots'
-        self.seach = ProductSearcher()
-        self.table = TableBuilder()
+        self.seach = ProductSearcher(CONFIG)
+        self.table_builder = TableBuilder(self.TITLE, URL, USER_NAME, PASSWORD)
+        self.article_dir = self.table_builder.article_dir
 
     def test_build_sanity(self):
         products = self.seach.search(self.product_group, self.keyword)
-        self.table.build(products)
-        with open(OUR_TABLE_PATH,'wb') as f:
+        fieldnames = {}
+        self.table_builder.build(products)
+        our_table_path = self.OUR_TABLE_PATH.format(self.TITLE)
+        with open(our_table_path, 'wb') as f:
             writer = csv.DictWriter(f, fieldnames=self.fieldnames_list)
             writer.writeheader()
             for product in products:
-                self.fieldnames['Picture'] = product.get_img_url('SmallImage')
-                self.fieldnames['Name'] = product.title
-                self.fieldnames['Rating'] = product.get_rating()
-                self.fieldnames['Price'] = product.get_price()
-                writer.writerow(self.fieldnames)
+                fieldnames['Picture'] = product.get_img_url('SmallImage')
+                fieldnames['Name'] = product.title
+                fieldnames['Rating'] = product.get_rating()
+                fieldnames['Price'] = product.get_price()
+                writer.writerow(fieldnames)
 
-        with open(TABLE_PATH) as f:
+        with open(path.join(self.article_dir, self.TABLE_PATH)) as f:
             content = f.read()
 
-        with open(OUR_TABLE_PATH) as f:
+        with open(our_table_path) as f:
             out_content = f.read()
 
         self.assertTrue(content == out_content)

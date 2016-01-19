@@ -1,16 +1,16 @@
 import unittest
 
-import Product
-import ProductSearcher
-import AmazonAPIManger
+import product
+import product_searcher
+import amazon_api_manger
 
 
 class ProductSearcherTests(unittest.TestCase):
     def setUp(self):
-        self.api = AmazonAPIManger.AmazonAPIManger().get_api()
+        self.api = amazon_api_manger.AmazonAPIManger().get_api()
         self.product_group = 'Shoes'
         self.keyword = 'Boots'
-        self.seach = ProductSearcher.ProductSearcher()
+        self.seach = product_searcher.ProductSearcher()
 
     def test_search_sanity(self):
         our_products = []
@@ -21,7 +21,7 @@ class ProductSearcherTests(unittest.TestCase):
                                                                                 'BrowseNodes,'
                                                                                 'OfferSummary,'
                                                                                 'Offers')
-            our_products.append(Product.Product(item, browse_nodes))
+            our_products.append(product.Product(item, browse_nodes))
             if index == 12:
                 break
 

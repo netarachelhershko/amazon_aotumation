@@ -14,8 +14,6 @@ class KeywordExtractor(object):
         with open(path) as f:
             reader = csv.reader(f)
             reader.next()
-            for row in reader:
-                keywords.append(row[0])
+            return [row[0] for row in reader]
 
-        return keywords
 

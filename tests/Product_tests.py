@@ -1,9 +1,9 @@
 import time
 
-import Config
-import Product
+import config
+import product
 import unittest
-import AmazonAPIManger
+import amazon_api_manger
 
 from BeautifulSoup import BeautifulSoup
 from common import open_url
@@ -14,7 +14,7 @@ class ProductTest(unittest.TestCase):
     KEYWORD = 'Boots'
 
     def setUp(self):
-        self.api = AmazonAPIManger.AmazonAPIManger(Config.CONFIG).get_api()
+        self.api = amazon_api_manger.AmazonAPIManger(config.CONFIG).get_api()
         self.product_items = self.api.item_search(self.PRODUCT_GROUP, Keywords=self.KEYWORD)
         self.product_items = self.product_items.page(1)
         self.item = self.product_items.Items.Item
@@ -23,7 +23,7 @@ class ProductTest(unittest.TestCase):
                                                                                       OfferSummary,\
                                                                                       Offers,\
                                                                                       Images')
-        self.product = Product.Product(self.item, self.browse_nodes)
+        self.product = product.Product(self.item, self.browse_nodes)
 
     def test_categories_sanity(self):
         our_categories = []
