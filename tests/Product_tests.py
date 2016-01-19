@@ -48,9 +48,12 @@ class ProductTest(unittest.TestCase):
         html_text = open_url(five_stars_review_url).text
         soup = BeautifulSoup(html_text)
         all_reviews = soup.findAll("span", "a-size-base review-text")
-        all_reviews = [review.text for review in all_reviews]
-        all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
-        self.assertTrue(all_reviews[0], review)
+        if len(all_reviews) > 0:
+            all_reviews = [review.text for review in all_reviews]
+            all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
+            self.assertTrue(all_reviews[0].encode('utf-8') == review)
+
+        self.assertTrue('null' == review)
 
     def test_img_url_sanity(self):
         our_url = self.browse_nodes.Items.Item.MediumImage.URL

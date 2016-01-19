@@ -7,7 +7,7 @@ class Product(object):
     def __init__(self, product_item, browse_nodes):
         self.browse_nodes = browse_nodes
         self.categories = []
-        self.ASIN = str(product_item.ASIN)
+        self.ASIN = product_item.ASIN.text
         self.parent_ASIN = str(product_item.ParentASIN)
         self.page_url = unquote(product_item.DetailPageURL.text)
         self.title = str(product_item.ItemAttributes.Title)

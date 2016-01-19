@@ -6,9 +6,6 @@ from common import retry
 from os import mkdir, listdir, path
 
 
-
-
-
 class TableBuilder(object):
     IMG_FORMAT = '<a target="_blank" rel="nofollow" href="http://amzn.to/1F9ASJc"><img src={0} /></a>'
     TABLE_PATH = r'article.csv'
@@ -38,7 +35,7 @@ class TableBuilder(object):
                 fieldnames['Price'] = product.get_price()
                 writer.writerow(fieldnames)
 
-        #return self._upload_table(full_path)
+        return self._upload_table(full_path)
 
     def _upload_table(self, path):
         """

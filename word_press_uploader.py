@@ -1,13 +1,10 @@
 from wordpress_xmlrpc import Client
 from wordpress_xmlrpc import WordPressPost
 from wordpress_xmlrpc.methods.posts import NewPost
-from add_table_to_tablepress import AddTableToTablepress
 from wordpress_xmlrpc.compat import xmlrpc_client
 from wordpress_xmlrpc.methods import media
 
 from common import open_url, retry
-
-TABLE_PATH = r'article.csv'
 
 
 class WordPressUploader(object):
@@ -20,15 +17,6 @@ class WordPressUploader(object):
         """
         self.client = retry(Client, url, user_name, password)
         self.title = title
-
-    def upload_table(self):
-        """
-        :return: table id
-        """
-        with open(TABLE_PATH) as f:
-            content = f.read()
-
-        return self.client.call(AddTableToTablepress(self.title, content))
 
     def upload_article(self, article, img_url, tags, categories):
         """

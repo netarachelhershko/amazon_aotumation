@@ -1,7 +1,7 @@
-import keyword_extractor
 import unittest
 import csv
 import types
+from keyword_extractor import KeywordExtractor
 
 CSV_PATH = 'test_keywords.csv'
 
@@ -9,7 +9,7 @@ CSV_PATH = 'test_keywords.csv'
 class KeywordExtractorTests(unittest.TestCase):
 
     def setUp(self):
-        self.extractor = keyword_extractor.KeywordExtractor()
+        self.extractor = KeywordExtractor()
 
     def tearDown(self):
         pass

@@ -28,7 +28,7 @@ class ArticleBuilderTests(unittest.TestCase):
     def test_get_tags_sanity(self):
         our_tags = []
         for product in self.products:
-            if product.manufacturer != '':
+            if product.manufacturer != 'null':
                 our_tags.append(product.manufacturer)
 
         tags = self.article_builder.get_tags()
