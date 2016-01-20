@@ -25,11 +25,10 @@ class Product(object):
         :return: List with 2 categories.
         """
         node = self.browse_nodes.Items.Item.BrowseNodes.BrowseNode
-        self.categories.append(str(node.Name))
-        index = 1
+        index = 0
         while hasattr(node, 'Ancestors') and index < 2 and \
                 hasattr(node.Ancestors.BrowseNode, 'Name'):
-            self.categories.append(str(node.Ancestors.BrowseNode.Name))
+            self.categories.append(str(node.Name))
             node = node.Ancestors.BrowseNode
             index += 1
 

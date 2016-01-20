@@ -29,11 +29,10 @@ class ProductTest(unittest.TestCase):
         our_categories = []
         categories = self.product.get_categories()
         node = self.browse_nodes.Items.Item.BrowseNodes.BrowseNode
-        our_categories.append(str(node.Name))
-        index = 1
+        index = 0
         while hasattr(node, 'Ancestors') and index < 2 and \
                 hasattr(node.Ancestors.BrowseNode, 'Name'):
-            our_categories.append(node.Ancestors.BrowseNode.Name)
+            our_categories.append(node.Name)
             node = node.Ancestors.BrowseNode
             index += 1
 
@@ -48,12 +47,12 @@ class ProductTest(unittest.TestCase):
         html_text = open_url(five_stars_review_url).text
         soup = BeautifulSoup(html_text)
         all_reviews = soup.findAll("span", "a-size-base review-text")
-        if len(all_reviews) > 0:
-            all_reviews = [review.text for review in all_reviews]
-            all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
-            self.assertTrue(all_reviews[0].encode('utf-8') == review)
+        if len(all_reviews) == 0:
+            self.assertTrue('null' == review)
 
-        self.assertTrue('null' == review)
+        all_reviews = [R.text for R in all_reviews]
+        all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
+        self.assertTrue(all_reviews[0].encode('utf-8') == review)
 
     def test_img_url_sanity(self):
         our_url = self.browse_nodes.Items.Item.MediumImage.URL
