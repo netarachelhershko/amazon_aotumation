@@ -1,5 +1,3 @@
-import time
-
 import config
 import product
 import unittest

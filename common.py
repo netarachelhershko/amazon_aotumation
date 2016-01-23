@@ -14,7 +14,7 @@ def get_short_url(url):
     :param url: Full url.
     :return: Shorten url.
     """
-    bitly = bitly_api.Connection(access_token=ACCESS_TOKEN)
+    bitly = bitly_api.Connection(access_token=BITLY_ACCESS_TOKEN)
     return bitly.shorten(url)['url']
 
 

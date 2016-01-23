@@ -10,7 +10,6 @@ class KeywordExtractor(object):
         :return list: Keywords list
         '''
 
-        keywords = []
         with open(path) as f:
             reader = csv.reader(f)
             reader.next()

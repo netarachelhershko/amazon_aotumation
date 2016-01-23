@@ -6,7 +6,6 @@ from common import open_url
 class Product(object):
     def __init__(self, product_item, browse_nodes):
         self.browse_nodes = browse_nodes
-        self.categories = []
         self.ASIN = product_item.ASIN.text
         self.parent_ASIN = str(product_item.ParentASIN)
         self.page_url = unquote(product_item.DetailPageURL.text)
@@ -14,6 +13,11 @@ class Product(object):
         self.product_group = str(product_item.ItemAttributes.ProductGroup)
         html_text = open_url(self.page_url).text
         self.soup = BeautifulSoup(html_text)
+        self.categories = []
+        self.imgs_url = {}
+        self.price = ''
+        self.rating = ''
+        self.review = ''
         try:
             self.manufacturer = str(product_item.ItemAttributes.Manufacturer)
         except:
@@ -24,6 +28,9 @@ class Product(object):
         Loop through the ancestors name and append its to list
         :return: List with 2 categories.
         """
+        if self.categories:
+            return self.categories
+
         node = self.browse_nodes.Items.Item.BrowseNodes.BrowseNode
         index = 0
         while hasattr(node, 'Ancestors') and index < 2 and \
@@ -39,6 +46,9 @@ class Product(object):
         Find the longest review with five stars.
         :return: Review - str.
         """
+        if self.review:
+            return self.review
+
         five_stars_review_url = 'http://www.amazon.com/product-reviews/{0}/?ie=' \
                                 'UTF8&filterBy=addFiveStar'.format(self.ASIN)
 
@@ -48,9 +58,11 @@ class Product(object):
         if len(all_reviews) > 0:
             all_reviews = [review.text for review in all_reviews]
             all_reviews = sorted(all_reviews, key=lambda word: len(word), reverse=True)
-            return all_reviews[0].encode('utf-8')
+            self.review = all_reviews[0].encode('utf-8')
+            return self.review
 
-        return 'null'
+        self.review = 'null'
+        return self.review
 
     def get_img_url(self, size='MediumImage'):
         '''
@@ -62,25 +74,41 @@ class Product(object):
         if size not in args:
             raise ValueError("Must be one of {0}, got {1}".format(args), size)
 
-        if hasattr(self.browse_nodes.Items.Item, size):
-            return getattr(self.browse_nodes.Items.Item, size).URL
+        if self.imgs_url.has_key(size):
+            return self.imgs_url[size]
 
-        return 'null'
+        if hasattr(self.browse_nodes.Items.Item, size):
+            self.imgs_url[size] = getattr(self.browse_nodes.Items.Item, size).URL
+            return self.imgs_url[size]
+
+        self.imgs_url[size] = 'null'
+        return self.imgs_url[size]
 
     def get_price(self):
+        if self.price:
+            return self.price
+
         node = self.browse_nodes.Items.Item.OfferSummary
         if hasattr(node, 'LowestNewPrice'):
-            return node.LowestNewPrice.FormattedPrice
+            self.price = node.LowestNewPrice.FormattedPrice
+            return self.price
 
         find_all = self.soup.findAll("span", id="priceblock_ourprice")
         if len(find_all) > 0:
-            return find_all[0].text
+            self.price = find_all[0].text
+            return self.price
 
-        return 'null'
+        self.price = 'null'
+        return self.price
 
     def get_rating(self):
+        if self.rating:
+            return self.rating
+
         find_all = self.soup.findAll("div", id="avgRating")
         if len(find_all) > 0:
-            return find_all[0].span.a.span.text[:3]
+            self.rating = find_all[0].span.a.span.text[:3]
+            return self.rating
 
-        return 'null'
+        self.rating = 'null'
+        return self.rating

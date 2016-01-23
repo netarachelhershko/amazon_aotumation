@@ -3,7 +3,7 @@ import csv
 from add_table_to_tablepress import AddTableToTablepress
 from wordpress_xmlrpc import Client
 from common import retry
-from os import mkdir, listdir, path
+from os import mkdir, path, makedirs
 
 
 class TableBuilder(object):
@@ -15,19 +15,19 @@ class TableBuilder(object):
         self.fieldnames_list = ['Picture', 'Name', 'Rating', 'Price']
         self.client = retry(Client, url, user_name, password)
         self.title = title
-        if self.ARTICLES_DIR not in listdir('.'):
-            mkdir(self.ARTICLES_DIR)
-
         self.article_dir = path.join(self.ARTICLES_DIR, title)
-        if self.title not in listdir(self.ARTICLES_DIR):
+        if not path.isdir(self.ARTICLES_DIR):
+            makedirs(self.article_dir)
+
+        if not path.isdir(self.article_dir):
             mkdir(self.article_dir)
 
     def build(self, products):
-        fieldnames = {}
         full_path = path.join(self.article_dir, self.TABLE_PATH)
         with open(full_path, 'wb') as f:
             writer = csv.DictWriter(f, fieldnames=self.fieldnames_list)
             writer.writeheader()
+            fieldnames = {}
             for product in products:
                 fieldnames['Picture'] = self.IMG_FORMAT.format(product.get_img_url('SmallImage'))
                 fieldnames['Name'] = product.title

@@ -41,9 +41,7 @@ class ProductSearcherTests(unittest.TestCase):
 
         products_ASIN = [product.ASIN for product in products]
         our_products_ASIN = [product.ASIN for product in our_products]
-        products_ASIN.sort()
-        our_products_ASIN.sort()
-        self.assertTrue(products_ASIN == our_products_ASIN)
+        self.assertItemsEqual(products_ASIN,our_products_ASIN)
 
 
 

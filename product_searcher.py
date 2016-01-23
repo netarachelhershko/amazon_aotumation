@@ -10,7 +10,6 @@ class ProductSearcher(object):
 
     def search(self, product_group, keyword):
         '''
-        :param api: amazonproduct item
         :param product_group: search_index(string)
         :param keyword: free keyword (string)
         :return: list of Products instance

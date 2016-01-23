@@ -3,32 +3,36 @@ from article_builder import ArticleBuilder
 from keyword_extractor import KeywordExtractor
 from product_searcher import ProductSearcher
 from table_builder import TableBuilder
-from word_press_uploader import WordPressUploader
+from wordpress_uploader import WordPressUploader
 
 
 class Manager(object):
     MIN_PRODUCTS = 8
+
     def __init__(self):
-        self.searcher = ProductSearcher(config.CONFIG)
-        self.table_builder = TableBuilder()
+        self.product_searcher = ProductSearcher(config.CONFIG)
 
     def _upload_article(self, keyword):
         """
         Get a keyword and uploads an article.
         :param keyword:
         """
-        products = self.searcher.search(config.PRODUCT_GROUP, keyword)
+        products = self.product_searcher.search(config.PRODUCT_GROUP, keyword)
         if len(products) < self.MIN_PRODUCTS:
             return
 
-        self.table_builder.build(products)
+
 
         article_builder = ArticleBuilder(keyword, products)
         title = article_builder.get_title()
+        table_builder = TableBuilder(title, config.URL, config.USER_NAME,
+                                          config.PASSWORD)
+
+        table_id = table_builder.build(products)
         wordpress_uploader = WordPressUploader(title, config.URL,
                                                config.USER_NAME, config.PASSWORD)
 
-        table_id = wordpress_uploader.upload_table()
+
         content = article_builder.build(table_id)
         # Chose The size of the main image
         main_image_url = products[0].get_img_url('LargeImage')

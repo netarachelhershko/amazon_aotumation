@@ -24,8 +24,6 @@ class KeywordExtractorTests(unittest.TestCase):
             for row in reader:
                 our_list.append(row[0])
 
-        keyword_list.sort()
-        our_list.sort()
-        self.assertTrue(keyword_list == our_list)
+        self.assertItemsEqual(keyword_list, our_list)
 
 

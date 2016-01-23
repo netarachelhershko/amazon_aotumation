@@ -17,34 +17,45 @@ class ArticleBuilder(object):
         """
         self.keyword = keyword
         self.products = products
+        self.title = ''
+        self.tags = []
+        self.article = ''
 
     def get_title(self):
-        title = "The Best {0}".format(self.keyword.title())
-        return title
+        if self.title:
+            return self.title
+
+        self.title = "The Best {0}".format(self.keyword.title())
+        return self.title
 
     def get_tags(self):
-        tags = []
+        if self.tags:
+            return self.tags
+
         for product in self.products:
             if product.manufacturer != 'null':
-                tags.append(product.manufacturer)
+                self.tags.append(product.manufacturer)
 
-        return list(set(tags))
+        self.tags = list(set(self.tags))
+        return self.tags
 
     def build(self, table_id):
         '''
         Builds an article, written in HTML, the article includes the table,
         title, review and image for all the products.
-        :param : list with Product items.
+        :param table_id: wordpress table id
         :return article: html string
         '''
+        if self.article:
+            return self.article
 
-        article = self.TABLE_FORMAT.format(table_id)
+        self.article = self.TABLE_FORMAT.format(table_id)
         for index, product in enumerate(self.products):
             shorten_url = common.get_short_url(product.page_url)
             alignment = self.CLASS_FORMAT.format('alignleft' if index % 2 == 0 else 'alignright')
             title = self.TITLE_FORMAT.format(shorten_url, product.title)
             img = self.IMG_FORMAT.format(shorten_url, alignment, product.get_img_url('LargeImage'), product.title)
             review = self.REVIEW_FORMAT.format(product.get_review())
-            article += self.PRODUCT_FORMAT.format(title, img, review)
+            self.article += self.PRODUCT_FORMAT.format(title, img, review)
 
-        return article
+        return self.article

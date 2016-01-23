@@ -40,10 +40,10 @@ class ArticleBuilderTests(unittest.TestCase):
         our_article = TABLE_FORMAT.format(table_id)
 
         for index, product in enumerate(self.products):
-            sorten_url = common.get_short_url(product.page_url)
+            shorten_url = common.get_short_url(product.page_url)
             alignment = CLASS_FORMAT.format('alignleft' if index % 2 == 0 else 'alignright')
-            title = TITLE_FORMAT.format(sorten_url, product.title)
-            img = IMG_FORMAT.format(sorten_url, alignment, product.get_img_url('LargeImage'), product.title)
+            title = TITLE_FORMAT.format(shorten_url, product.title)
+            img = IMG_FORMAT.format(shorten_url, alignment, product.get_img_url('LargeImage'), product.title)
             review = REVIEW_FORMAT.format(product.get_review())
             our_article += PRODUCT_FORMAT.format(title, img, review)
 
