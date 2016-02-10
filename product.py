@@ -7,14 +7,12 @@ class Product(object):
     def __init__(self, product_item, browse_nodes):
         self.browse_nodes = browse_nodes
         self.ASIN = product_item.ASIN.text
-        self.parent_ASIN = str(product_item.ParentASIN)
         self.page_url = unquote(product_item.DetailPageURL.text)
-        self.title = str(product_item.ItemAttributes.Title)
-        self.product_group = str(product_item.ItemAttributes.ProductGroup)
+        self.title = product_item.ItemAttributes.Title.text.encode('utf-8')
         html_text = open_url(self.page_url).text
         self.soup = BeautifulSoup(html_text)
         self.categories = []
-        self.imgs_url = {}
+        self.img_urls = {}
         self.price = ''
         self.rating = ''
         self.review = ''
@@ -74,15 +72,15 @@ class Product(object):
         if size not in args:
             raise ValueError("Must be one of {0}, got {1}".format(args), size)
 
-        if self.imgs_url.has_key(size):
-            return self.imgs_url[size]
+        if self.img_urls.has_key(size):
+            return self.img_urls[size]
 
         if hasattr(self.browse_nodes.Items.Item, size):
-            self.imgs_url[size] = getattr(self.browse_nodes.Items.Item, size).URL
-            return self.imgs_url[size]
+            self.img_urls[size] = getattr(self.browse_nodes.Items.Item, size).URL
+            return self.img_urls[size]
 
-        self.imgs_url[size] = 'null'
-        return self.imgs_url[size]
+        self.img_urls[size] = 'null'
+        return self.img_urls[size]
 
     def get_price(self):
         if self.price:
@@ -90,7 +88,7 @@ class Product(object):
 
         node = self.browse_nodes.Items.Item.OfferSummary
         if hasattr(node, 'LowestNewPrice'):
-            self.price = node.LowestNewPrice.FormattedPrice
+            self.price = node.LowestNewPrice.FormattedPrice.text
             return self.price
 
         find_all = self.soup.findAll("span", id="priceblock_ourprice")
