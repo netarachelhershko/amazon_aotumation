@@ -13,5 +13,7 @@ setup(name='amazon_automation',
           'bitly_api',
           'requests',
           'BeautifulSoup',
+          'python-amazon-product-api',
+          'lxml'
       ],
       zip_safe=False)
