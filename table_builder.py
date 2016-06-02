@@ -2,12 +2,12 @@ import csv
 
 from add_table_to_tablepress import AddTableToTablepress
 from wordpress_xmlrpc import Client
-from common import retry
+from common import retry, get_short_url
 from os import mkdir, path, makedirs
 
 
 class TableBuilder(object):
-    IMG_FORMAT = '<a target="_blank" rel="nofollow" href="http://amzn.to/1F9ASJc"><img src={0} /></a>'
+    IMG_FORMAT = '<a target="_blank" rel="nofollow" href="{}"><img src={} /></a>'
     TABLE_PATH = r'article.csv'
     ARTICLES_DIR = r'articles'
 
@@ -29,7 +29,7 @@ class TableBuilder(object):
             writer.writeheader()
             fieldnames = {}
             for product in products:
-                fieldnames['Picture'] = self.IMG_FORMAT.format(product.get_img_url('SmallImage'))
+                fieldnames['Picture'] = self.IMG_FORMAT.format(get_short_url(product.page_url), product.get_img_url('SmallImage'))
                 fieldnames['Name'] = product.title
                 fieldnames['Rating'] = product.get_rating()
                 fieldnames['Price'] = product.get_price()
