@@ -7,7 +7,7 @@ from wordpress_uploader import WordPressUploader
 
 
 class Manager(object):
-    MIN_PRODUCTS = 8
+    MIN_PRODUCTS = 5
 
     def __init__(self):
         self.product_searcher = ProductSearcher(config.CONFIG)
@@ -21,17 +21,14 @@ class Manager(object):
         if len(products) < self.MIN_PRODUCTS:
             return
 
-
-
         article_builder = ArticleBuilder(keyword, products)
         title = article_builder.get_title()
         table_builder = TableBuilder(title, config.URL, config.USER_NAME,
-                                          config.PASSWORD)
+                                     config.PASSWORD)
 
         table_id = table_builder.build(products)
         wordpress_uploader = WordPressUploader(title, config.URL,
                                                config.USER_NAME, config.PASSWORD)
-
 
         content = article_builder.build(table_id)
         # Chose The size of the main image

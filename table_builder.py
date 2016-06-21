@@ -29,7 +29,8 @@ class TableBuilder(object):
             writer.writeheader()
             fieldnames = {}
             for product in products:
-                fieldnames['Picture'] = self.IMG_FORMAT.format(get_short_url(product.page_url), product.get_img_url('SmallImage'))
+                fieldnames['Picture'] = self.IMG_FORMAT.format(get_short_url(product.page_url),
+                                                               product.get_img_url('SmallImage'))
                 fieldnames['Name'] = product.title
                 fieldnames['Rating'] = product.get_rating()
                 fieldnames['Price'] = product.get_price()
@@ -37,11 +38,11 @@ class TableBuilder(object):
 
         return self._upload_table(full_path)
 
-    def _upload_table(self, path):
+    def _upload_table(self, table_path):
         """
         :return: table id
         """
-        with open(path) as f:
+        with open(table_path) as f:
             content = f.read()
 
         return self.client.call(AddTableToTablepress(self.title, content))

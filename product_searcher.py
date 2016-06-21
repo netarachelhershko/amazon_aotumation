@@ -3,17 +3,17 @@ from product import Product
 
 
 class ProductSearcher(object):
-    MAX_RESULTS = 11
+    MAX_RESULTS = 10
 
     def __init__(self, config):
         self.api = AmazonAPIManger(config).get_api()
 
     def search(self, product_group, keyword):
-        '''
+        """
         :param product_group: search_index(string)
         :param keyword: free keyword (string)
         :return: list of Products instance
-        '''
+        """
 
         product_items = self.api.item_search(product_group, Keywords=keyword)
         products = []
@@ -34,8 +34,7 @@ class ProductSearcher(object):
                 index -= 1
                 continue
 
-            if product.get_rating() == 'null' or \
-                            product.get_review() == 'null' or product.get_price() == 'null':
+            if product.get_rating() == 'null' or product.get_review() == 'null' or product.get_price() == 'null':
                 index -= 1
                 continue
 

@@ -33,7 +33,7 @@ class WordPressUploader(object):
         post.terms_names = {'post_tag': tags,
                             'category': categories}
 
-        #post.post_status = 'publish'
+        # post.post_status = 'publish'
         post.id = self.client.call(NewPost(post))
 
     def _upload_image(self, img_url):

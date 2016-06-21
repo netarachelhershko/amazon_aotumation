@@ -1,8 +1,10 @@
 from urllib import unquote
 from BeautifulSoup import BeautifulSoup
 from common import open_url
+from config import CONFIG
 
 
+# noinspection PyBroadException
 class Product(object):
     def __init__(self, product_item, browse_nodes):
         self.browse_nodes = browse_nodes
@@ -16,10 +18,31 @@ class Product(object):
         self.price = ''
         self.rating = ''
         self.review = ''
+        self.features = ''
+        self.num_of_reviews = None
+        self.five_stars_review_url = 'http://www.amazon.com/product-reviews/{0}/?ie=' \
+                                     'UTF8&filterBy=addFiveStar&tag={1}'.format(self.ASIN, CONFIG['associate_tag'])
         try:
             self.manufacturer = str(product_item.ItemAttributes.Manufacturer)
         except:
             self.manufacturer = 'null'
+
+    def get_features(self):
+        if self.features:
+            return self.features
+
+        features = self.soup.find('div', id='feature-bullets')
+        bullets = filter(lambda _: not _.get('id'), features.findAll('li'))
+        bullet_text = ['<li>{}</li>'.format(x.text) for x in bullets]
+        self.features = '<ul>{}</ul>'.format('\n'.join(bullet_text))
+        return self.features
+
+    def get_num_of_reviews(self):
+        if self.num_of_reviews:
+            return self.num_of_reviews
+
+        self.num_of_reviews = self.soup.find('span', id='acrCustomerReviewText').text.split()[0]
+        return self.num_of_reviews
 
     def get_categories(self):
         """
@@ -47,10 +70,7 @@ class Product(object):
         if self.review:
             return self.review
 
-        five_stars_review_url = 'http://www.amazon.com/product-reviews/{0}/?ie=' \
-                                'UTF8&filterBy=addFiveStar'.format(self.ASIN)
-
-        html_text = open_url(five_stars_review_url).text
+        html_text = open_url(self.five_stars_review_url).text
         soup = BeautifulSoup(html_text)
         all_reviews = soup.findAll("span", "a-size-base review-text")
         if len(all_reviews) > 0:
@@ -63,16 +83,16 @@ class Product(object):
         return self.review
 
     def get_img_url(self, size='MediumImage'):
-        '''
+        """
         :param size: Must be one of the options:
         'SmallImage','MediumImage','LargeImage'. By default its MediumImage.
         :return: url
-        '''
+        """
         args = ['SmallImage', 'MediumImage', 'LargeImage']
         if size not in args:
-            raise ValueError("Must be one of {0}, got {1}".format(args), size)
+            raise ValueError("Must be one of {0}, got {1}".format(args, size), size)
 
-        if self.img_urls.has_key(size):
+        if size in self.img_urls:
             return self.img_urls[size]
 
         if hasattr(self.browse_nodes.Items.Item, size):

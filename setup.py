@@ -14,6 +14,6 @@ setup(name='amazon_automation',
           'requests',
           'BeautifulSoup',
           'python-amazon-product-api',
-          'lxml'
+          'lxml', 'tldextract'
       ],
       zip_safe=False)

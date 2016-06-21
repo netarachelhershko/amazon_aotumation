@@ -31,6 +31,7 @@ def open_url(url):
     return r
 
 
+# noinspection PyBroadException
 def retry(func, *args):
     """
     Takes a function and its args, and tries to call it several times.
