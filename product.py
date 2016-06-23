@@ -33,7 +33,10 @@ class Product(object):
 
         features = self.soup.find('div', id='feature-bullets')
         bullets = filter(lambda _: not _.get('id'), features.findAll('li'))
-        bullet_text = ['<li>{}</li>'.format(x.text) for x in bullets]
+        bullets = [_.text for _ in bullets]
+        try: bullets = [_.encode('utf-8') for _ in bullets]
+        except: pass
+        bullet_text = ['<li>{}</li>'.format(x) for x in bullets]
         self.features = '<ul>{}</ul>'.format('\n'.join(bullet_text))
         return self.features
 

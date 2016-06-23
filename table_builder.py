@@ -2,7 +2,7 @@ import csv
 
 from add_table_to_tablepress import AddTableToTablepress
 from wordpress_xmlrpc import Client
-from common import retry, get_short_url
+from common import retry, get_short_url, get_internal_url_redirect
 from os import mkdir, path, makedirs
 
 
@@ -29,7 +29,9 @@ class TableBuilder(object):
             writer.writeheader()
             fieldnames = {}
             for product in products:
-                fieldnames['Picture'] = self.IMG_FORMAT.format(get_short_url(product.page_url),
+                product_url = get_short_url(product.page_url)
+                product_url = get_internal_url_redirect(product_url, product.title) if INTERNAL_REDIRECT_SHORTEN_URLS else product_url
+                fieldnames['Picture'] = self.IMG_FORMAT.format(product_url,
                                                                product.get_img_url('SmallImage'))
                 fieldnames['Name'] = product.title
                 fieldnames['Rating'] = product.get_rating()

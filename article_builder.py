@@ -26,7 +26,7 @@ class ArticleBuilder(object):
         if self.title:
             return self.title
 
-        self.title = "The Best {0}".format(self.keyword.title())
+        self.title = "Best {0}".format(self.keyword.title())
         return self.title
 
     def get_tags(self):
@@ -53,6 +53,7 @@ class ArticleBuilder(object):
         self.article = self.TABLE_FORMAT.format(table_id)
         for index, product in enumerate(self.products):
             shorten_url = common.get_short_url(product.page_url)
+            shorten_url = common.get_internal_url_redirect(shorten_url, product.title) if INTERNAL_REDIRECT_SHORTEN_URLS else shorten_url
             alignment = self.CLASS_FORMAT.format('alignleft' if index % 2 == 0 else 'alignright')
             title = self.TITLE_FORMAT.format(shorten_url, product.title)
             features = self.FEATURES_FORMAT.format(price=product.get_price(), score=product.get_rating(),

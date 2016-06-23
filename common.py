@@ -2,7 +2,9 @@ import time
 
 import bitly_api
 import requests
+from config import URL
 from requests.adapters import HTTPAdapter
+
 
 BITLY_ACCESS_TOKEN = 'd3f2a7bf8e9590d4d6cace4631bc96b28c7022cb'
 BROWSER_UA = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36' \
@@ -44,3 +46,12 @@ def retry(func, *args):
             return func(*args)
         except:
             time.sleep(1)
+
+
+def get_internal_url_redirect(short_url, product_title):
+    domain = tldextract.extract(URL).registered_domain
+    shorten_id = short_url.split('/')[1]
+    dashed_title = '-'.join(product_title.lower().split())
+    internal_url = 'http://{domain}/{dashed_title}/get_product/{shorten_id}'.format(
+                    domain=domain, dashed_title=dashed_title, shorten_id=shorten_id)
+    return internal_url
