@@ -1,4 +1,5 @@
 import common
+from config import INTERNAL_REDIRECT_SHORTEN_URLS
 
 
 class ArticleBuilder(object):

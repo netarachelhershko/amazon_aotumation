@@ -8,14 +8,13 @@ class ProductSearcher(object):
     def __init__(self, config):
         self.api = AmazonAPIManger(config).get_api()
 
-    def search(self, product_group, keyword):
+    def search(self, product_group, keyword, browse_node=None):
         """
         :param product_group: search_index(string)
         :param keyword: free keyword (string)
         :return: list of Products instance
         """
-
-        product_items = self.api.item_search(product_group, Keywords=keyword)
+        product_items = self.api.item_search(product_group, Keywords=keyword, BrowseNode=browse_node)
         products = []
         index = -1
         for item in product_items:

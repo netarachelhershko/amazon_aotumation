@@ -1,3 +1,4 @@
+import re
 import config
 from article_builder import ArticleBuilder
 from keyword_extractor import KeywordExtractor
@@ -17,7 +18,8 @@ class Manager(object):
         Get a keyword and uploads an article.
         :param keyword:
         """
-        products = self.product_searcher.search(config.PRODUCT_GROUP, keyword)
+        keyword, browse_node = re.findall('(.*)(?:\?bn=(\d+)?)', keyword)[0]
+        products = self.product_searcher.search(config.PRODUCT_GROUP, keyword, browse_node=browse_node)
         if len(products) < self.MIN_PRODUCTS:
             return
 

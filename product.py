@@ -31,14 +31,17 @@ class Product(object):
         if self.features:
             return self.features
 
-        features = self.soup.find('div', id='feature-bullets')
-        bullets = filter(lambda _: not _.get('id'), features.findAll('li'))
-        bullets = [_.text for _ in bullets]
-        try: bullets = [_.encode('utf-8') for _ in bullets]
-        except: pass
-        bullet_text = ['<li>{}</li>'.format(x) for x in bullets]
-        self.features = '<ul>{}</ul>'.format('\n'.join(bullet_text))
-        return self.features
+        try:
+            features = self.soup.find('div', id='feature-bullets')
+            bullets = filter(lambda _: not _.get('id'), features.findAll('li'))
+            bullets = [_.text for _ in bullets]
+            try: bullets = [_.encode('utf-8') for _ in bullets]
+            except: pass
+            bullet_text = ['<li>{}</li>'.format(x) for x in bullets]
+            self.features = '<ul>{}</ul>'.format('\n'.join(bullet_text))
+            return self.features
+        except:
+            pass
 
     def get_num_of_reviews(self):
         if self.num_of_reviews:

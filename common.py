@@ -1,7 +1,7 @@
 import time
-
-import bitly_api
 import requests
+import bitly_api
+import tldextract
 from config import URL
 from requests.adapters import HTTPAdapter
 

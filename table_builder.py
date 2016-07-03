@@ -1,9 +1,10 @@
 import csv
-
-from add_table_to_tablepress import AddTableToTablepress
 from wordpress_xmlrpc import Client
-from common import retry, get_short_url, get_internal_url_redirect
 from os import mkdir, path, makedirs
+
+from config import INTERNAL_REDIRECT_SHORTEN_URLS
+from add_table_to_tablepress import AddTableToTablepress
+from common import retry, get_short_url, get_internal_url_redirect
 
 
 class TableBuilder(object):
