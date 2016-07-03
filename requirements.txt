@@ -1,0 +1,7 @@
+python-wordpress-xmlrpc
+bitly_api
+requests
+BeautifulSoup
+python-amazon-product-api
+lxml
+tldextract
